@@ -1,4 +1,4 @@
 *.sh
 *.mt
 *.sqlite
-*.txt
+/*.txt
