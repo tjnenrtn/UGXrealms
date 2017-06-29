@@ -1,1 +1,4 @@
 *.sh
+*.mt
+*.sqlite
+*.txt
