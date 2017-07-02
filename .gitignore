@@ -3,3 +3,5 @@
 *.sqlite
 /*.txt
 *.cfgfile
+irc_tokens
+*.db
