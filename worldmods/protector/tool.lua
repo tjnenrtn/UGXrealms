@@ -2,26 +2,23 @@
 -- protector placement tool (thanks to Shara for code and idea)
 
 minetest.register_craftitem("protector:tool", {
-	description = "Protector Placer Tool (stand on protector, face direction and use)",
-	inventory_image = "protector_display.png",
+	description = "Protector Placer Tool (stand near protector, face direction and use)",
+	inventory_image = "protector_display.png^protector_logo.png",
 	stack_max = 1,
 
 	on_use = function(itemstack, user, pointed_thing)
 
 		local name = user:get_player_name()
 
-		-- check node player occupies
+		-- check for protector near player (2 block radius)
 		local pos = user:getpos()
-		local nod = minetest.get_node(pos).name
-		if nod ~= "protector:protect2" then
-			-- check node under player
-			pos.y = pos.y - 1
-			nod = minetest.get_node(pos).name
-			if nod ~= "protector:protect"
-			and nod ~= "protector:protect2" then
-				return
-			end
-		end
+		local pp = minetest.find_nodes_in_area(
+			vector.subtract(pos, 2), vector.add(pos, 2),
+			{"protector:protect", "protector:protect2"})
+
+		if #pp == 0 then return end -- none found
+
+		pos = pp[1] -- take position of first protector found
 
 		-- get members on protector
 		local meta = minetest.get_meta(pos)
@@ -31,9 +28,14 @@ minetest.register_craftitem("protector:tool", {
 		local dir = minetest.dir_to_facedir( user:get_look_dir() )
 		local vec = {x = 0, y = 0, z = 0}
 		local gap = (protector.radius * 2) + 1
+		local pit =  user:get_look_pitch()
 
 		-- set placement coords
-		if dir == 0 then
+		if pit > 1.2 then
+			vec.y = gap -- up
+		elseif pit < -1.2 then
+			vec.y = -gap -- down
+		elseif dir == 0 then
 			vec.z = gap -- north
 		elseif dir == 1 then
 			vec.x = gap -- east
@@ -68,6 +70,7 @@ minetest.register_craftitem("protector:tool", {
 		end
 
 		-- do we have protectors to use ?
+		local nod
 		local inv = user:get_inventory()
 
 		if not inv:contains_item("main", "protector:protect")
@@ -76,11 +79,16 @@ minetest.register_craftitem("protector:tool", {
 			return
 		end
 
-		-- take protector
+		-- take protector (block first then logo)
 		if inv:contains_item("main", "protector:protect") then
+
 			inv:remove_item("main", "protector:protect")
+			nod = "protector:protect"
+
 		elseif inv:contains_item("main", "protector:protect2") then
+
 			inv:remove_item("main", "protector:protect2")
+			nod = "protector:protect2"
 		end
 
 		-- place protector
@@ -88,6 +96,7 @@ minetest.register_craftitem("protector:tool", {
 
 		-- set protector metadata
 		local meta = minetest.get_meta(pos)
+
 		meta:set_string("owner", name)
 		meta:set_string("infotext", "Protection (owned by " .. name .. ")")
 
@@ -97,6 +106,9 @@ minetest.register_craftitem("protector:tool", {
 		else
 			meta:set_string("members", "")
 		end
+
+		minetest.chat_send_player(name,
+				"Protector placed at " .. minetest.pos_to_string(pos))
 
 	end,
 })

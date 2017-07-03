@@ -48,8 +48,10 @@ Change log:
       Protectors and chest cannot be moved by mesecon pistons or machines.
 2.1 - Added 'protector_night_pvp' setting so night-time becomes a free for all and
       players can hurt one another even inside protected areas (not spawn protected)
+2.2 - Updated protector tool so that player only needs to stand nearby (2 block radius)
+      It can also place vertically (up and down) as well.  New protector recipe added.
 
-Lucky Blocks: 6
+Lucky Blocks: 10
 
 
 Usage: (requires server privelage)
