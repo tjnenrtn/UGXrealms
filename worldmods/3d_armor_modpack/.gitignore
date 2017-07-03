@@ -6,6 +6,3 @@ tags
 *.vim
 armor.conf
 
-## Eclipse project files & directories
-.project
-.settings

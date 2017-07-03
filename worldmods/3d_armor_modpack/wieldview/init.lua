@@ -1,13 +1,13 @@
 local time = 0
-local update_time = tonumber(minetest.settings:get("wieldview_update_time"))
+local update_time = tonumber(minetest.setting_get("wieldview_update_time"))
 if not update_time then
 	update_time = 2
-	minetest.settings:set("wieldview_update_time", tostring(update_time))
+	minetest.setting_set("wieldview_update_time", tostring(update_time))
 end
-local node_tiles = minetest.settings:get_bool("wieldview_node_tiles")
+local node_tiles = minetest.setting_getbool("wieldview_node_tiles")
 if not node_tiles then
 	node_tiles = false
-	minetest.settings:set("wieldview_node_tiles", "false")
+	minetest.setting_set("wieldview_node_tiles", "false")
 end
 
 wieldview = {
@@ -66,7 +66,7 @@ end
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	wieldview.wielded_item[name] = ""
-	minetest.after(0, function(player)
+	minetest.after(1, function(player)
 		wieldview:update_wielded_item(player)
 	end, player)
 end)
