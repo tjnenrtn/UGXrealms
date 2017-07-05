@@ -1,3 +1,4 @@
+--[[
 local modpath = minetest.get_modpath(minetest.get_current_modname())
 
 dofile(modpath.."/api.lua")
@@ -107,3 +108,4 @@ minetest.register_on_joinplayer(function(player)
 		end
 	end, player)
 end)
+]]--
