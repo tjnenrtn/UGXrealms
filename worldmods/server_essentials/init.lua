@@ -188,7 +188,7 @@ minetest.register_chatcommand("heal", {
 
 --This simply isn't needed.
 --[[
-minetest.register_chatcommand((((("gettime", {
+minetest.register_chatcommand("gettime", {
 	params = "",
 	description = "Get the current time of day",
 	privs = {},
@@ -226,7 +226,6 @@ minetest.register_chatcommand("setspeed", {
 
 		if #param == 0 or tonumber(param[1]) == nil then
 			minetest.chat_send_player(player_name, "You must supply proper a speed")
-		elseif players[player_name] and players[param[2]] then
 			minetest.chat_send_player(player_name, "Setting player " ..
 					param[2] ..
 					"'s walking speed to " ..
