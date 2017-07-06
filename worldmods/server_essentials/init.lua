@@ -188,7 +188,7 @@ minetest.register_chatcommand("heal", {
 
 --This simply isn't needed.
 --[[
-minetest.register_chatcommand("gettime", {
+minetest.register_chatcommand((((("gettime", {
 	params = "",
 	description = "Get the current time of day",
 	privs = {},
