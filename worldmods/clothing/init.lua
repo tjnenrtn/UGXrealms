@@ -108,4 +108,4 @@ minetest.register_on_joinplayer(function(player)
 		end
 	end, player)
 end)
-]]--
+--]]
