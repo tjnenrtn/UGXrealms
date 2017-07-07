@@ -444,7 +444,7 @@ function playereffects.hud_update(player)
 		if(hudinfos ~= nil) then
 			for effect_id, hudinfo in pairs(hudinfos) do
 				local effect = playereffects.effects[effect_id]
-				if(effect ~= nil and hudinfo.text_id ~f= nil) then
+				if(effect ~= nil and hudinfo.text_id ~= nil) then
 					local description = playereffects.effect_types[effect.effect_type_id].description
 					local repeat_interval = playereffects.effect_types[effect.effect_type_id].repeat_interval
 					if(repeat_interval ~= nil) then
