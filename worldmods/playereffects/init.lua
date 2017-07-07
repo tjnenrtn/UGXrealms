@@ -355,7 +355,7 @@ function playereffects.save_to_file()
 	if file then
 		file:write(savestring)
 		io.close(file)
-		minetest.log("action", "[playereffects] Wrote playereffects data into "..filepath..".")
+--disable spam		minetest.log("action", "[playereffects] Wrote playereffects data into "..filepath..".")
 	else
 		minetest.log("error", "[playereffects] Failed to write playereffects data into "..filepath..".")
 	end
@@ -427,7 +427,7 @@ minetest.register_globalstep(function(dtime)
 	-- Autosave into file
 	if(playereffects.use_autosave == true and playereffects.autosave_timer >= playereffects.autosave_time) then
 		playereffects.autosave_timer = 0
-		minetest.log("action", "[playereffects] Autosaving mod data to playereffects.mt ...")
+--disable spam		minetest.log("action", "[playereffects] Autosaving mod data to playereffects.mt ...")
 		playereffects.save_to_file()
 	end
 end)
@@ -444,7 +444,7 @@ function playereffects.hud_update(player)
 		if(hudinfos ~= nil) then
 			for effect_id, hudinfo in pairs(hudinfos) do
 				local effect = playereffects.effects[effect_id]
-				if(effect ~= nil and hudinfo.text_id ~= nil) then
+				if(effect ~= nil and hudinfo.text_id ~f= nil) then
 					local description = playereffects.effect_types[effect.effect_type_id].description
 					local repeat_interval = playereffects.effect_types[effect.effect_type_id].repeat_interval
 					if(repeat_interval ~= nil) then
