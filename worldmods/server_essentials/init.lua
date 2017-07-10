@@ -9,7 +9,7 @@ distributed without any warranty.
 
 players = {}
 check_timer = 0
-dofile(minetest.get_modpath("serveressentials") .. "/settings.lua")
+dofile(minetest.get_modpath("server_essentials") .. "/settings.lua")
 
 minetest.register_privilege("godmode",
 		"Player can use godmode with the /godmode command")
