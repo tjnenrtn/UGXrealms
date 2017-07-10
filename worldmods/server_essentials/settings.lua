@@ -15,9 +15,12 @@ FIRST_TIME_JOIN_MSG = " has joined the server for the first time, Welcome!"
 -- All messages sent with the /broadcast command will be prefixed with this
 BROADCAST_PREFIX = "[SERVER]"
 
+-- Disabled, this is handled by [chatdam] mod.
+--[[
 -- If true, players who send a chat message longer than MAX_CHAT_MSG_LENGTH will be kicked
 KICK_CHATSPAM = true
 MAX_CHAT_MSG_LENGTH = 300
+--]]
 
 -- Delay in seconds that will occur between issuing /spawn command and actually being teleported to the static_spawnpoint
 SPAWN_DELAY = 0

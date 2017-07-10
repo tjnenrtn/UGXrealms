@@ -316,7 +316,9 @@ minetest.register_on_newplayer(function(player)
 	end
 end)
 
-minetest.register_on_chat_message(function(name, message)
+
+-- Disabled, this is handled by [chatdam] mod.
+--[[minetest.register_on_chat_message(function(name, message)
 	if KICK_CHATSPAM and not minetest.check_player_privs(name, {chatspam=true}) and
 			string.len(message) > MAX_CHAT_MSG_LENGTH then
 		minetest.kick_player(name,
@@ -327,6 +329,7 @@ minetest.register_on_chat_message(function(name, message)
 	end
 	return
 end)
+--]]
 
 minetest.register_globalstep(function(dtime)
 	-- Loop through all connected players
