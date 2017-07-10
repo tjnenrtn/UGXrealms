@@ -19,9 +19,12 @@ local function kill_node(pos, node, puncher)
 			local add_node = puncher:get_inventory():add_item("main", node_drops[i])
 			if add_node then minetest.add_item(pos, add_node) end
 		end
+		minetest.remove_node(pos)
+		nodeupdate(pos)
 	end
 end
 
 minetest.register_on_punchnode(function(pos, node, puncher)
 	kill_node(pos, node, puncher)
 end)
+
