@@ -26,6 +26,7 @@ dofile(modpath .. "/craftitems.lua")
 dofile(modpath .. "/default_nodes.lua")
 dofile(modpath .. "/nodes.lua")
 dofile(modpath .. "/tools.lua")
+dofile(modpath .. "/priv.lua")
 
 if minetest.setting_getbool("log_mods") then
 	minetest.log("action", S("[maptools] loaded."))
