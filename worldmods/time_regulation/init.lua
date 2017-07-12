@@ -262,7 +262,7 @@ minetest.register_chatcommand("time_reg", {
                 elseif param == "start" then
                         local res = time_reg.start_loop()
                         if res then
-                t                time_reg.set_status(time_reg.STATUS_ACTIVE, "ACTIVE")
+                                time_reg.set_status(time_reg.STATUS_ACTIVE, "ACTIVE")
                                 return true, "Loop started. Time regulation enabled"
                         else
                                 return false, "Loop couldn't be started, it already is"
