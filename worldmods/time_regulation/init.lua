@@ -218,7 +218,7 @@ function time_reg.loop(loop, forceupdate)
                                 time_reg.log("Entering day period : period skipped", "info")
                         else
                                 minetest.settings:set("time_speed", time_reg.day_time_speed)
-                                time_reg.log("Entering day period : time_speed " .. time_reg.day_time_speed, "info")
+                                time_reg.log("Entering day period : time_speed " .. time_reg.day_time_speed, "action")
                         end
                 else
                         if time_reg.ratio.night == 0 then
@@ -226,7 +226,7 @@ function time_reg.loop(loop, forceupdate)
                                 time_reg.log("Entering night period : period skipped", "info")
                         else
                                 minetest.settings:set("time_speed", time_reg.night_time_speed)
-                                time_reg.log("Entering night period : time_speed " .. time_reg.night_time_speed, "info")
+                                time_reg.log("Entering night period : time_speed " .. time_reg.night_time_speed, "action")
                         end
                 end
         end
@@ -262,7 +262,7 @@ minetest.register_chatcommand("time_reg", {
                 elseif param == "start" then
                         local res = time_reg.start_loop()
                         if res then
-                                time_reg.set_status(time_reg.STATUS_ACTIVE, "ACTIVE")
+                t                time_reg.set_status(time_reg.STATUS_ACTIVE, "ACTIVE")
                                 return true, "Loop started. Time regulation enabled"
                         else
                                 return false, "Loop couldn't be started, it already is"
