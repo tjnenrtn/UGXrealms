@@ -372,7 +372,7 @@ minetest.register_globalstep(function(dtime)
 			if players[player_name]["god_mode"] then
 				player:set_hp(20)
 				player:set_breath(11)
-				player:hunger.update_hunger(player, 30)
+				hunger.update_hunger(player, 30)
 			end
 		end
 	end
