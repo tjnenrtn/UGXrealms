@@ -6,10 +6,10 @@ HUNGER_TICK = 500		-- time in seconds after that 1 hunger point is taken
 HUNGER_HEALTH_TICK = 4		-- time in seconds after player gets healed/damaged
 HUNGER_MOVE_TICK = 1		-- time in seconds after the movement is checked
 
-HUNGER_EXHAUST_DIG = 1		-- exhaustion increased this value after digged node
-HUNGER_EXHAUST_PLACE = 0.5	-- exhaustion increased this value after placed
-HUNGER_EXHAUST_MOVE = 0		-- exhaustion increased this value if player movement detected
-HUNGER_EXHAUST_LVL = 160	-- at what exhaustion player saturation gets lowered
+HUNGER_EXHAUST_DIG = 2		-- exhaustion increased this value after digged node
+HUNGER_EXHAUST_PLACE = 1	-- exhaustion increased this value after placed
+HUNGER_EXHAUST_MOVE = 1		-- exhaustion increased this value if player movement detected
+HUNGER_EXHAUST_LVL = 100	-- at what exhaustion player saturation gets lowered
 
 HUNGER_HEAL = 1				-- number of HP player gets healed after HUNGER_HEALTH_TICK
 HUNGER_HEAL_LVL = 15		-- lower level of saturation needed to get healed
