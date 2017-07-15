@@ -218,7 +218,7 @@ function time_reg.loop(loop, forceupdate)
                                 time_reg.log("Entering day period : period skipped", "info")
                         else
                                 minetest.settings:set("time_speed", time_reg.day_time_speed)
-                                time_reg.log("Entering day period : time_speed " .. time_reg.day_time_speed, "action")
+                                time_reg.log("Entering day period : time_speed " .. time_reg.day_time_speed, "info")
                         end
                 else
                         if time_reg.ratio.night == 0 then
@@ -226,7 +226,7 @@ function time_reg.loop(loop, forceupdate)
                                 time_reg.log("Entering night period : period skipped", "info")
                         else
                                 minetest.settings:set("time_speed", time_reg.night_time_speed)
-                                time_reg.log("Entering night period : time_speed " .. time_reg.night_time_speed, "action")
+                                time_reg.log("Entering night period : time_speed " .. time_reg.night_time_speed, "info")
                         end
                 end
         end
