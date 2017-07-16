@@ -15,6 +15,7 @@ elseif minetest.get_modpath("unified_inventory") and
 	unified_inventory.register_button("clothing", {
 		type = "image",
 		image = "inventory_plus_clothing.png",
+		tooltip = "Change Clothing",
 	})
 	unified_inventory.register_page("clothing", {
 		get_formspec = function(player, perplayer_formspec)

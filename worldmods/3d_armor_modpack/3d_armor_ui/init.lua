@@ -21,6 +21,7 @@ end)
 unified_inventory.register_button("armor", {
 	type = "image",
 	image = "inventory_plus_armor.png",
+	tooltip = "Change Armor",
 })
 
 unified_inventory.register_page("armor", {
