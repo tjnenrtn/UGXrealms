@@ -49,7 +49,7 @@ unified_inventory.register_page("u_skins", {
 		if u_skins.get_type(u_skins.u_skins[name]) == u_skins.type.MODEL then
 			formspec = formspec
 				.. "image[0,.75;1,2;"..u_skins.u_skins[name].."_preview.png]"
-				.. "image[1,.75;1,2;"..u_skins.u_skins[name].."_preview_back.png]"
+--disable back preview				.. "image[1,.75;1,2;"..u_skins.u_skins[name].."_preview_back.png]"
 				.. "label[6,.5;Raw texture:]"
 				.. "image[6,1;2,1;"..u_skins.u_skins[name]..".png]"
 			
