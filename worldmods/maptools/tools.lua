@@ -58,4 +58,12 @@ minetest.register_on_punchnode(function(pos, node, puncher)
 		minetest.remove_node(pos) -- The node is removed directly, which means it even works on non-empty containers and group-less nodes.
 		nodeupdate(pos) -- Run node update actions like falling nodes.
 	end
+	if puncher:get_wielded_item():get_name() == "maptools:pick_admin" then
+		if not minetest.check_player_privs(puncher:get_player_name(), {worldedit = true}) then
+			puncher:set_wielded_item("")
+			minetest.log("action", puncher:get_player_name() ..
+			" tried to use an Admin Pick!")
+			return
+		end
+	end
 end)
