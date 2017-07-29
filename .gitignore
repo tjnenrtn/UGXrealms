@@ -8,3 +8,8 @@ irc_tokens
 .*
 homes
 schems/
+*.dat
+*.data
+*.home
+beds_spawns
+*.json
