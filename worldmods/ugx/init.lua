@@ -9,3 +9,10 @@ minetest.register_abm({
 		end
 	end
 })
+
+-- Add craft for green dye.
+minetest.register_craft({
+	type = "shapeless",
+	output = "dye:green 4",
+	recipe = {"default:cactus"},
+})
