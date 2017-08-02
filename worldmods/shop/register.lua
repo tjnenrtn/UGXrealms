@@ -161,12 +161,12 @@ minetest.register_node("shop:register", {
 
 })
 
+-- Crafts & Craft Items
 minetest.register_craftitem("shop:coin", {
 	description = "Gold Coin",
 	inventory_image = "shop_coin.png",
 })
 
--- Crafts & Craft Items
 minetest.register_craft({
 	output = "shop:coin 4",
 	recipe = {
@@ -175,11 +175,11 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	type = "shapeless",
 	output = "default:gold_ingot",
 	recipe = {
-		{"shop:coin", "shop:coin", "shop:coin"},
-		{"shop:coin", "shop:coin", "shop:coin"},
-		{"shop:coin", "shop:coin", "shop:coin"}
+		{"shop:coin", "shop:coin"},
+		{"shop:coin", "shop:coin"},
 	}
 })
 

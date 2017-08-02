@@ -19,7 +19,7 @@ function shop.setform(pos)
 		"list[nodemeta:" ..spos.. ";fast;5,1;1,1;]" ..
 		"item_image[2,1;1,1;shop:coin]" ..
 		"item_image[5,1;1,1;shop:coin]" ..
-		"label[2,2;" .. shop.price1 .. " Coin per second]" ..
+		"label[2,2;" .. shop.price1 .. " Coins per second]" ..
 		"label[5,2;" .. shop.price2 .. " Coins per second]" ..
 		"list[current_player;main;0,3;8,4;]"
 	return formspec
