@@ -1,9 +1,9 @@
 
--- Mobs Api (5th July 2017)
+-- Mobs Api (30th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170705"
+mobs.version = "20170730"
 
 
 -- Intllib
@@ -48,7 +48,7 @@ local damage_enabled = minetest.setting_getbool("enable_damage")
 local peaceful_only = minetest.setting_getbool("only_peaceful_mobs")
 local disable_blood = minetest.setting_getbool("mobs_disable_blood")
 local creative = minetest.setting_getbool("creative_mode")
-local spawn_protected = tonumber(minetest.setting_get("mobs_spawn_protected")) or 1
+local spawn_protected = minetest.setting_getbool("mobs_spawn_protected") ~= false
 local remove_far = minetest.setting_getbool("remove_far_mobs")
 local difficulty = tonumber(minetest.setting_get("mob_difficulty")) or 1.0
 local show_health = minetest.setting_getbool("mob_show_health") ~= false
@@ -64,6 +64,13 @@ local enable_pathfinding = true
 local stuck_timeout = 3 -- how long before mob gets stuck in place and starts searching
 local stuck_path_timeout = 10 -- how long will mob follow path before giving up
 
+-- default nodes
+local node_fire = "fire:basic_flame"
+local node_permanent_flame = "fire:permanent_flame"
+local node_ice = "default:ice"
+local node_snowblock = "default:snowblock"
+local node_snow = "default:snow"
+mobs.fallback_node = minetest.registered_aliases["mapgen_dirt"] or "default:dirt"
 
 -- play sound
 local mob_sound = function(self, sound)
@@ -132,7 +139,8 @@ end
 -- set defined animation
 local set_animation = function(self, anim)
 
-	if not self.animation then return end
+	if not self.animation
+	or not anim then return end
 
 	self.animation.current = self.animation.current or ""
 
@@ -153,7 +161,7 @@ end
 
 
 -- above function exported for mount.lua
-function mobs:set_animation(anim)
+function mobs:set_animation(self, anim)
 	set_animation(self, anim)
 end
 
@@ -242,9 +250,10 @@ end
 local flight_check = function(self, pos_w)
 
 	local nod = self.standing_in
+	local def = minetest.registered_nodes[nod]
 
 	if type(self.fly_in) == "string"
-	and (nod == self.fly_in or nod == self.fly_in:gsub("_source", "_flowing")) then
+	and (nod == self.fly_in or def.liquid_alternative_flowing ~= "") then
 
 		return true
 
@@ -252,7 +261,7 @@ local flight_check = function(self, pos_w)
 
 		for _,fly_in in pairs(self.fly_in) do
 
-			if nod == fly_in or nod == fly_in:gsub("_source", "_flowing") then
+			if nod == fly_in or def.liquid_alternative_flowing ~= "" then
 
 				return true
 			end
@@ -431,6 +440,10 @@ local check_for_death = function(self, cause, cmi_cause)
 	and self.animation.die_start
 	and self.animation.die_end then
 
+		local frames = self.animation.die_end - self.animation.die_start
+		local speed = self.animation.die_speed or 15
+		local length = max(frames / speed, 0)
+
 		self.attack = nil
 		self.v_start = false
 		self.timer = 0
@@ -440,7 +453,7 @@ local check_for_death = function(self, cause, cmi_cause)
 		set_velocity(self, 0)
 		set_animation(self, "die")
 
-		minetest.after(2, function(self)
+		minetest.after(length, function(self)
 
 			if use_cmi then
 				cmi.notify_die(self.object, cmi_cause)
@@ -507,7 +520,7 @@ end
 -- get node but use fallback for nil or unknown
 local node_ok = function(pos, fallback)
 
-	fallback = fallback or "default:dirt"
+	fallback = fallback or mobs.fallback_node
 
 	local node = minetest.get_node_or_nil(pos)
 
@@ -574,7 +587,6 @@ local do_env_damage = function(self)
 	-- don't fall when on ignore, just stand still
 	if self.standing_in == "ignore" then
 		self.object:setvelocity({x = 0, y = 0, z = 0})
-		--print ("--- stopping on ignore")
 	end
 
 	local nodef = minetest.registered_nodes[self.standing_in]
@@ -598,8 +610,8 @@ local do_env_damage = function(self)
 	-- lava or fire
 	elseif self.lava_damage
 	and (nodef.groups.lava
-	or self.standing_in == "fire:basic_flame"
-	or self.standing_in == "fire:permanent_flame") then
+	or self.standing_in == node_fire
+	or self.standing_in == node_permanent_flame) then
 
 		if self.lava_damage ~= 0 then
 
@@ -681,7 +693,7 @@ local do_jump = function(self)
 	})
 
 	-- thin blocks that do not need to be jumped
-	if nod.name == "default:snow" then
+	if nod.name == node_snow then
 		return false
 	end
 
@@ -694,7 +706,7 @@ local do_jump = function(self)
 
 		local v = self.object:getvelocity()
 
-		v.y = self.jump_height -- + 1
+		v.y = self.jump_height
 
 		set_animation(self, "jump") -- only when defined
 
@@ -1049,7 +1061,7 @@ local smart_mobs = function(self, s, p, dist, dtime)
 
 						if ndef1 and (ndef1.buildable_to or ndef1.groups.liquid) then
 
-								minetest.set_node(s, {name = "default:dirt"})
+								minetest.set_node(s, {name = mobs.fallback_node})
 						end
 					end
 
@@ -1420,7 +1432,7 @@ end
 -- execute current state (stand, walk, run, attacks)
 local do_states = function(self, dtime)
 
-	local yaw = 0
+	local yaw = self.object:get_yaw() or 0
 
 	if self.state == "stand" then
 
@@ -1450,7 +1462,9 @@ local do_states = function(self, dtime)
 
 				if lp.x > s.x then yaw = yaw + pi end
 			else
-				yaw = (random(0, 360) - 180) / 180 * pi
+--				yaw = (random(0, 360) - 180) / 180 * pi
+
+				yaw = yaw + random(-0.5, 0.5)
 			end
 
 			yaw = set_yaw(self.object, yaw)
@@ -1511,7 +1525,7 @@ local do_states = function(self, dtime)
 				and minetest.registered_nodes[self.standing_in].groups.water) then
 
 				lp = minetest.find_node_near(s, 5, {"group:soil", "group:stone",
-					"group:sand", "default:ice", "default:snowblock"})
+					"group:sand", node_ice, node_snowblock})
 
 				-- did we find land?
 				if lp then
@@ -1530,7 +1544,9 @@ local do_states = function(self, dtime)
 						do_jump(self)
 						set_velocity(self, self.walk_velocity)
 				else
-					yaw = (random(0, 360) - 180) / 180 * pi
+--					yaw = (random(0, 360) - 180) / 180 * pi
+
+					yaw = yaw + random(-0.5, 0.5)
 				end
 
 			else
@@ -1551,7 +1567,9 @@ local do_states = function(self, dtime)
 		elseif random(1, 100) <= 30 then
 
 			--yaw = random() * 2 * pi
-			yaw = (random(0, 360) - 180) / 180 * pi
+--			yaw = (random(0, 360) - 180) / 180 * pi
+
+			yaw = yaw + random(-0.5, 0.5)
 
 			yaw = set_yaw(self.object, yaw)
 		end
@@ -1650,7 +1668,11 @@ local do_states = function(self, dtime)
 					set_velocity(self, self.run_velocity)
 				end
 
-				set_animation(self, "run")
+				if self.animation and self.animation.run_start then
+					set_animation(self, "run")
+				else
+					set_animation(self, "walk")
+				end
 			else
 				set_velocity(self, 0)
 				set_animation(self, "punch")
@@ -1675,31 +1697,36 @@ local do_states = function(self, dtime)
 
 					local pos = self.object:getpos()
 					local radius = self.explosion_radius or 1
+					local damage_radius = radius
 
 					-- dont damage anything if area protected or next to water
 					if minetest.find_node_near(pos, 1, {"group:water"})
 					or minetest.is_protected(pos, "") then
 
-						mob_sound(self, self.sounds.explode)
-
-						self.object:remove()
-
---						effect(pos, 15, "tnt_smoke.png")
-						effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
-
-						-- hurt player/mobs caught in blast area
-						entity_physics(pos, radius)
-
-						return
+						damage_radius = 0
 					end
-
-					pos.y = pos.y - 1
-
-					mobs:explosion(pos, radius, 1, 1, self.sounds.explode)
 
 					self.object:remove()
 
-					entity_physics(pos, radius)
+					if minetest.get_modpath("tnt") and tnt and tnt.boom
+					and not minetest.is_protected(pos, "") then
+
+						tnt.boom(pos, {
+							radius = radius,
+							damage_radius = damage_radius,
+							sound = self.sounds.explode,
+						})
+					else
+
+						minetest.sound_play(self.sounds.explode, {
+							pos = pos,
+							gain = 1.0,
+							max_hear_distance = self.sounds.distance or 32
+						})
+
+						entity_physics(pos, damage_radius)
+						effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
+					end
 
 					return
 				end
@@ -1818,7 +1845,11 @@ local do_states = function(self, dtime)
 						set_velocity(self, self.run_velocity)
 					end
 
-					set_animation(self, "run")
+					if self.animation and self.animation.run_start then
+						set_animation(self, "run")
+					else
+						set_animation(self, "walk")
+					end
 				end
 
 			else -- rnd: if inside reach range
@@ -2395,6 +2426,7 @@ local mob_activate = function(self, staticdata, def, dtime)
 	self.object:set_properties(self)
 	set_yaw(self.object, (random(0, 360) - 180) / 180 * pi)
 	update_tag(self)
+	set_animation(self, "stand")
 
 	if use_cmi then
 		self._cmi_components = cmi.activate_components(self.serialized_cmi_components)
@@ -2765,7 +2797,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			end
 
 			-- mobs cannot spawn in protected areas when enabled
-			if spawn_protected == 1
+			if not spawn_protected
 			and minetest.is_protected(pos, "") then
 --print ("--- inside protected area", name)
 				return
@@ -2848,106 +2880,6 @@ function mobs:spawn(def)
 
 	mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, interval,
 		chance, active_object_count, min_height, max_height, day_toggle, on_spawn)
-end
-
-
--- set content id's
-local c_air = minetest.get_content_id("air")
-local c_ignore = minetest.get_content_id("ignore")
-local c_obsidian = minetest.get_content_id("default:obsidian")
-local c_brick = minetest.get_content_id("default:obsidianbrick")
-local c_chest = minetest.get_content_id("default:chest_locked")
-local c_fire = minetest.get_content_id("fire:basic_flame")
-
--- explosion (cannot break protected or unbreakable nodes)
-function mobs:explosion(pos, radius, fire, smoke, sound)
-
-	radius = radius or 0
-	fire = fire or 0
-	smoke = smoke or 0
-
-	-- if area protected or near map limits then no blast damage
-	if minetest.is_protected(pos, "")
-	or not within_limits(pos, radius) then
-		return
-	end
-
-	-- explosion sound
-	if sound
-	and sound ~= "" then
-
-		minetest.sound_play(sound, {
-			pos = pos,
-			gain = 1.0,
-			max_hear_distance = 16
-		})
-	end
-
-	pos = vector.round(pos) -- voxelmanip doesn't work properly unless pos is rounded ?!?!
-
-	local vm = VoxelManip()
-	local minp, maxp = vm:read_from_map(vector.subtract(pos, radius), vector.add(pos, radius))
-	local a = VoxelArea:new({MinEdge = minp, MaxEdge = maxp})
-	local data = vm:get_data()
-	local p = {}
-	local pr = PseudoRandom(os.time())
-
-	if smoke > 0 then
-		--(pos, amount, texture, min_size, max_size, radius, gravity, glow)
-		effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
-	end
-
-
-	for z = -radius, radius do
-	for y = -radius, radius do
-	local vi = a:index(pos.x + (-radius), pos.y + y, pos.z + z)
-	for x = -radius, radius do
-
-		p.x = pos.x + x
-		p.y = pos.y + y
-		p.z = pos.z + z
-
-		if (x * x) + (y * y) + (z * z) <= (radius * radius) + pr:next(-radius, radius)
-		and data[vi] ~= c_air
-		and data[vi] ~= c_ignore
-		and data[vi] ~= c_obsidian
-		and data[vi] ~= c_brick
-		and data[vi] ~= c_chest
-		and data[vi] ~= c_fire then
-
-			local n = node_ok(p).name
-			local on_blast = minetest.registered_nodes[n].on_blast
-
-			if on_blast then
-
-				return on_blast(p)
-
-			elseif minetest.registered_nodes[n].groups.unbreakable == 1 then
-
-				-- do nothing
-			else
-
-				-- after effects
-				if fire > 0
-				and (minetest.registered_nodes[n].groups.flammable
-				or random(1, 100) <= 30) then
-
-					minetest.set_node(p, {name = "fire:basic_flame"})
-				else
-					minetest.set_node(p, {name = "air"})
-
---					if smoke > 0 then
---						effect(p, 2, "tnt_smoke.png")
---					end
-				end
-			end
-		end
-
-		vi = vi + 1
-
-	end
-	end
-	end
 end
 
 
@@ -3045,16 +2977,12 @@ function mobs:register_arrow(name, def)
 					end
 
 					local entity = player:get_luaentity()
-						and player:get_luaentity().name or ""
 
-					if self.hit_mob
+					if entity
+					and self.hit_mob
+					and entity._cmi_is_mob == true
 					and tostring(player) ~= self.owner_id
-					and entity ~= self.object:get_luaentity().name
-					and entity ~= "__builtin:item"
-					and entity ~= "__builtin:falling_node"
-					and entity ~= "gauges:hp_bar"
-					and entity ~= "signs:text"
-					and entity ~= "itemframes:item" then
+					and entity.name ~= self.object:get_luaentity().name then
 
 						self.hit_mob(self, player)
 
@@ -3068,6 +2996,38 @@ function mobs:register_arrow(name, def)
 			self.lastpos = pos
 		end
 	})
+end
+
+
+-- compatibility function
+function mobs:explosion(pos, radius)
+	local self = {sounds = {}}
+	self.sounds.explode = "tnt_explode"
+	mobs:boom(self, pos, radius)
+end
+
+
+-- make explosion with protection and tnt mod check
+function mobs:boom(self, pos, radius)
+
+	if minetest.get_modpath("tnt") and tnt and tnt.boom
+	and not minetest.is_protected(pos, "") then
+
+		tnt.boom(pos, {
+			radius = radius,
+			damage_radius = radius,
+			sound = self.sounds.explode,
+		})
+	else
+		minetest.sound_play(self.sounds.explode, {
+			pos = pos,
+			gain = 1.0,
+			max_hear_distance = self.sounds.distance or 32
+		})
+
+		entity_physics(pos, radius)
+		effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
+	end
 end
 
 
