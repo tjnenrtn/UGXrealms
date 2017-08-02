@@ -175,7 +175,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	type = "shapeless",
 	output = "default:gold_ingot",
 	recipe = {
 		{"shop:coin", "shop:coin"},
