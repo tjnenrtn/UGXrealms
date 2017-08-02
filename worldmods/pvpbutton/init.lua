@@ -20,8 +20,12 @@ end
 -- The toggle callback
 function toggle_pvp(localname)
 	local player = minetest.get_player_by_name(localname)
+	local playername = player:get_player_name()
+	local privs = minetest.get_player_privs(playername)
 	if pvptable[localname] == 0 then
 		pvptable[localname] = 1
+		privs.fast = nil
+		minetest.set_player_privs(playername, privs)
 		minetest.chat_send_player(localname,
 			"PvP was enabled for "..localname)
 		player:hud_remove(huds[localname])
@@ -43,6 +47,8 @@ function toggle_pvp(localname)
 		return
 	else
 		pvptable[localname] = 0
+		privs.fast = true
+		minetest.set_player_privs(localname, privs)
 		minetest.chat_send_player(localname,
 			"PvP was disabled for "..localname)
 		player:hud_remove(huds[localname])
@@ -90,6 +96,10 @@ end
 
 -- Initialize values for players
 minetest.register_on_joinplayer(function(player)
+	local playername = player:get_player_name()
+	local privs = minetest.get_player_privs(playername)
+	privs.fast = true
+	minetest.set_player_privs(playername, privs)
 	pvptable[player:get_player_name()] = 0
 	huds[player:get_player_name()] = nil
 	if inv_mod == "inventory_plus" then
