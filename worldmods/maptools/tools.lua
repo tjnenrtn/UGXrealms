@@ -62,13 +62,14 @@ minetest.register_on_punchnode(function(pos, node, puncher)
 end)
 
 minetest.register_on_dignode(function(pos, node, puncher)
-
+	local inv = puncher:get_inventory()
 	if puncher:get_wielded_item():get_name() == "maptools:pick_admin" or puncher:get_wielded_item():get_name() == "maptools:pick_admin_with_drops" then
 		if not minetest.check_player_privs(puncher:get_player_name(), {worldedit = true}) then
 			puncher:set_wielded_item("")
 			minetest.swap_node(pos, {
 					name = node.name,
 					param2 = node.param2 })
+			inv:remove_item("main",node.name)
 			minetest.log("action", puncher:get_player_name() ..
 			" tried to use an Admin Pick!")
 		end
