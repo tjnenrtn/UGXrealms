@@ -173,8 +173,8 @@ function workbench.timer(pos)
 	end
 
 	-- Tool's wearing range: 0-65535 | 0 = new condition
-	tool:add_wear(-500)
-	hammer:add_wear(700)
+	tool:add_wear(-1100)
+	hammer:add_wear(500)
 
 	inv:set_stack("tool", 1, tool)
 	inv:set_stack("hammer", 1, hammer)
@@ -204,7 +204,7 @@ function workbench.on_put(pos, listname, _, stack)
 		workbench:get_output(inv, input, stack:get_name())
 	elseif listname == "tool" or listname == "hammer" then
 		local timer = minetest.get_node_timer(pos)
-		timer:start(3.0)
+		timer:start(1.0)
 	end
 end
 
