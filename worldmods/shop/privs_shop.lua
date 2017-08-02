@@ -1,26 +1,27 @@
 -- Privs Shop
 
 -- Global privs shop price, settable by /shop
-shop.price = 1
+shop.price1 = 2
+shop.price2 = 8
 
 -- Formspec
 function shop.setform(pos)
 	local spos = pos.x..","..pos.y..","..pos.z
 	local formspec =
-		"size[8,6]" ..
+		"size[8,7]" ..
 		default.gui_bg ..
 		default.gui_bg_img ..
 		default.gui_slots ..
-		"label[0,0;Priv Shop]" ..
-		"label[2.45,0.25;Fly]" ..
-		"label[4.45,0.25;Fast]" ..
-		"list[nodemeta:" ..spos.. ";fly;2.5,0.75;1,1;]" ..
-		"list[nodemeta:" ..spos.. ";fast;4.5,0.75;1,1;]" ..
-		"item_image[2.5,0.75;1,1;shop:coin]" ..
-		"item_image[4.5,0.75;1,1;shop:coin]" ..
-		"label[2.45,1.75;" .. shop.price .. " sec/$]" ..
-		"label[4.45,1.75;" .. shop.price .. " sec/$]" ..
-		"list[current_player;main;0,2.25;8,4;]"
+		"label[3.3,0;Privs Shop]" ..
+		"label[2,0.4;Fly]" ..
+		"label[5,0.4;Fast]" ..
+		"list[nodemeta:" ..spos.. ";fly;2,1;1,1;]" ..
+		"list[nodemeta:" ..spos.. ";fast;5,1;1,1;]" ..
+		"item_image[2,1;1,1;shop:coin]" ..
+		"item_image[5,1;1,1;shop:coin]" ..
+		"label[2,2;" .. shop.price1 .. " Coin per second]" ..
+		"label[5,2;" .. shop.price2 .. " Coins per second]" ..
+		"list[current_player;main;0,3;8,4;]"
 	return formspec
 end
 
@@ -32,7 +33,7 @@ function shop.buy(pos, listname, index, stack, player)
 		local count = stack:get_count()
 		inv:remove_item("fly", stack)
 		local name = player:get_player_name()
-		local time = count * shop.price
+		local time = count / shop.price1
 
 		local q = playereffects.get_player_effects(name)
 		for i=1, #q do
@@ -49,7 +50,7 @@ function shop.buy(pos, listname, index, stack, player)
 		local count = stack:get_count()
 		inv:remove_item("fast", stack)
 		local name = player:get_player_name()
-		local time = count * shop.price
+		local time = count / shop.price2
 
 		local q = playereffects.get_player_effects(name)
 		for i=1, #q do
@@ -141,7 +142,8 @@ playereffects.register_effect_type("fast", "Fast mode available", nil, {"fast"},
 	false,
 	false)
 
-
+--Lets do this via code instead since there are now two different prices.
+--[[
 -- /shop chat command registration
 minetest.register_chatcommand("shop", {
 	params = "<price>",
@@ -157,6 +159,7 @@ minetest.register_chatcommand("shop", {
 		end
 	end
 })
+--]]
 
 minetest.register_craft({
 	output = "shop:privs",

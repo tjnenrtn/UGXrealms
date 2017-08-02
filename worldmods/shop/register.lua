@@ -168,7 +168,7 @@ minetest.register_craftitem("shop:coin", {
 
 -- Crafts & Craft Items
 minetest.register_craft({
-	output = "shop:coin 9",
+	output = "shop:coin 4",
 	recipe = {
 		{"default:gold_ingot"},
 	}
