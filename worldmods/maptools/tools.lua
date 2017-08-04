@@ -69,7 +69,7 @@ minetest.register_on_dignode(function(pos, node, digger)
 				minetest.swap_node(pos, {
 						name = node.name,
 						param2 = node.param2 })
---				inv:remove_item("main",node.name)
+				inv:remove_item("main",node.name)
 				minetest.log("action", digger:get_player_name() .. " tried to use an Admin Pick!")
 			end
 		end
