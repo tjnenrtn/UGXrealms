@@ -1,3 +1,5 @@
+--Disabled now that [lava_protect] mod is installed
+--[[
 -- Temporarily prevent lava griefing until proper code can be written.
 minetest.register_abm({
 	nodenames = {"default:lava_source"},
@@ -9,6 +11,7 @@ minetest.register_abm({
 		end
 	end
 })
+--]]
 
 -- Add craft for green dye.
 minetest.register_craft({

@@ -13,7 +13,7 @@ minetest.override_item("bucket:bucket_lava", {
 		end
 		--node = minetest.get_node(pointed_thing.under)
 		if not minetest.check_player_privs(placer:get_player_name(),
-				{lava = true}) and pointed_thing.under.y > 0 then
+				{lava = true}) and pointed_thing.under.y >= 0 then
 			minetest.chat_send_player(placer:get_player_name(),"You dont have permission to place lava above sea level (missing privledges: lava)")
 			return itemstack
 		else
