@@ -52,7 +52,6 @@ minetest.register_tool("maptools:pick_admin_with_drops", {
 })
 
 minetest.register_on_punchnode(function(pos, node, puncher)
-
 	if puncher:get_wielded_item():get_name() == "maptools:pick_admin"
 	and minetest.get_node(pos).name ~= "air" and minetest.check_player_privs(puncher:get_player_name(), {worldedit = true}) then
 		minetest.log("action", puncher:get_player_name() .. " digs " .. minetest.get_node(pos).name .. " at " .. minetest.pos_to_string(pos) .. " using an Admin Pickaxe.")
@@ -61,17 +60,16 @@ minetest.register_on_punchnode(function(pos, node, puncher)
 	end
 end)
 
-minetest.register_on_dignode(function(pos, node, puncher)
-	local inv = puncher:get_inventory()
-	if puncher:get_wielded_item():get_name() == "maptools:pick_admin" or puncher:get_wielded_item():get_name() == "maptools:pick_admin_with_drops" then
-		if not minetest.check_player_privs(puncher:get_player_name(), {worldedit = true}) then
-			puncher:set_wielded_item("")
+minetest.register_on_dignode(function(pos, node, digger)
+	local inv = digger:get_inventory()
+	if digger:get_wielded_item():get_name() == "maptools:pick_admin" or digger:get_wielded_item():get_name() == "maptools:pick_admin_with_drops" then
+		if not minetest.check_player_privs(digger:get_player_name(), {worldedit = true}) then
+			digger:set_wielded_item("")
 			minetest.swap_node(pos, {
 					name = node.name,
 					param2 = node.param2 })
 			inv:remove_item("main",node.name)
-			minetest.log("action", puncher:get_player_name() ..
-			" tried to use an Admin Pick!")
+			minetest.log("action", digger:get_player_name() .. " tried to use an Admin Pick!")
 		end
 	end
 end)
