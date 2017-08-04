@@ -61,7 +61,7 @@ minetest.register_on_punchnode(function(pos, node, puncher)
 end)
 
 minetest.register_on_dignode(function(pos, node, digger)
-	if not digger == nil then
+	if digger ~= nil then
 		local inv = digger:get_inventory()
 		if digger:get_wielded_item():get_name() == "maptools:pick_admin" or digger:get_wielded_item():get_name() == "maptools:pick_admin_with_drops" then
 			if not minetest.check_player_privs(digger:get_player_name(), {worldedit = true}) then
