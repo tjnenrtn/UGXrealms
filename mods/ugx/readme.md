@@ -1,3 +1,3 @@
-###UGX Realms
+### UGX Realms
 
 Custom server tweaks.
