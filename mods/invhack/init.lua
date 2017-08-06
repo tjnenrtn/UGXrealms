@@ -4,6 +4,13 @@ hacktool.gui=function(itemstack, user, pointed_thing)
 	if pointed_thing.type~="object" then return end
 	local player=pointed_thing.ref
 	if player:is_player()==false then return end
+	local name = user:get_player_name()
+	if not minetest.check_player_privs(user, {invhack=true}) then
+		minetest.chat_send_player(name, "Missing privilege: invhack")
+		user:set_wielded_item("")
+		return
+	end
+
 	hacktool.tmp={}
 	hacktool.tmp=player
 	local inv=player:get_inventory()
@@ -38,11 +45,6 @@ minetest.register_on_player_receive_fields(function(player, form, pressed)
 
 		if pressed.quit then
 			if hacktool.tmp then hacktool.tmp=nil end
-			return
-		end
-
-		if not minetest.check_player_privs(name, {invhack=true}) then
-			minetest.chat_send_player(name, "Missing privilege: invhack")
 			return
 		end
 
