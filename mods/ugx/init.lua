@@ -19,3 +19,24 @@ minetest.register_craft({
 	output = "dye:green 4",
 	recipe = {"default:cactus"},
 })
+
+-- Add craft for bones.
+local x = "bonemeal:bone"
+minetest.register_craft({
+	output = "bones:bones",
+	recipe = {
+		{x,x,x},
+		{x,x,x},
+		{x,x,x},
+	},
+})
+
+-- Add cooking craft for keys AND resolve coins craft conflict.
+minetest.clear_craft({
+	output = "default:skeleton_key",
+})
+minetest.register_craft({
+	type = "cooking",
+	output = "default:skeleton_key",
+	recipe = "default:gold_ingot",
+})
