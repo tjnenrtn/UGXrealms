@@ -59,3 +59,38 @@ func = function(name, param)
 	hud_update(minetest.get_player_by_name(name))
 end,
 })
+
+minetest.register_node("death_pos:bone_finder", {
+	description = "Bone Finder",
+	tiles = {
+		"death_pos_bones_top.png^death_pos_magnifying_glass.png",
+		"death_pos_bones_bottom.png^death_pos_magnifying_glass.png",
+		"death_pos_bones_side.png^death_pos_magnifying_glass.png",
+		"death_pos_bones_side.png^death_pos_magnifying_glass.png",
+		"death_pos_bones_rear.png^death_pos_magnifying_glass.png",
+		"death_pos_bones_front.png^death_pos_magnifying_glass.png"
+	},
+	paramtype2 = "facedir",
+	groups = {oddly_breakable_by_hand = 2},
+	after_place_node = function(pos, placer, itemstack)
+		local meta = minetest.get_meta(pos)
+		local owner = placer:get_player_name()
+		meta:set_string("infotext","Right Click or double tap on me to teleport to you last known death position.")
+	end,
+	on_rightclick = function(pos, node, clicker, itemstack)
+		local name = clicker:get_player_name()
+		local pos = minetest.string_to_pos(mod_storage:get_string(name))
+		pos.y = pos.y+1
+		clicker:setpos(pos)
+		minetest.chat_send_player(name, "Teleported to ypur last known death position")
+	end
+})
+
+minetest.register_craft({
+	output = "death_pos:bone_finder",
+	recipe = {
+		{"","default:glass",""},
+		{"","default:stick",""},
+		{"default:mese_block","bones:bones",""},
+	},
+})
