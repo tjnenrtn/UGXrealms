@@ -85,14 +85,14 @@ minetest.register_node("death_pos:bone_finder", {
 	after_place_node = function(pos, placer, itemstack)
 		local meta = minetest.get_meta(pos)
 		local owner = placer:get_player_name()
-		meta:set_string("infotext","Right Click or double tap on me to teleport to you last known death position.\n\nPunch to toggle showing the last death position on the HUD.")
+		meta:set_string("infotext","Right Click or double tap on me to teleport to your last known death position.\n\nPunch to toggle your last death position on the HUD.")
 	end,
 	on_rightclick = function(pos, node, clicker, itemstack)
 		local name = clicker:get_player_name()
 		local pos = minetest.string_to_pos(mod_storage:get_string(name))
 		pos.y = pos.y+1
 		local player_pos = clicker:get_pos()
-		minetest.chat_send_player(name, "Don't move for 5 seconds.")
+		minetest.chat_send_player(name, "Teleporting to bones, don't move for 5 seconds.")
 		minetest.after(5, find_bones, clicker, player_pos, pos)
 	end,
 	on_punch = function(pos, node, puncher)
@@ -107,10 +107,7 @@ minetest.register_node("death_pos:bone_finder", {
 })
 
 minetest.register_craft({
+	type = "shapeless",
 	output = "death_pos:bone_finder",
-	recipe = {
-		{"","default:glass",""},
-		{"","default:stick",""},
-		{"default:mese_block","bones:bones",""},
-	},
+	recipe = {"default:mese_block","bones:bones"},
 })
