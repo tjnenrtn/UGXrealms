@@ -6,7 +6,6 @@
 irc_tokens
 *.db
 homes
-schems/
 *.dat
 *.data
 *.home
