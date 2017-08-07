@@ -90,10 +90,14 @@ minetest.register_node("death_pos:bone_finder", {
 	on_rightclick = function(pos, node, clicker, itemstack)
 		local name = clicker:get_player_name()
 		local pos = minetest.string_to_pos(mod_storage:get_string(name))
-		pos.y = pos.y+1
+		if pos ~= nil then pos.y = pos.y+1 end
 		local player_pos = clicker:get_pos()
-		minetest.chat_send_player(name, "Teleporting to bones, don't move for 5 seconds.")
-		minetest.after(5, find_bones, clicker, player_pos, pos)
+		if mod_storage:get_string(name) == "" then
+			minetest.chat_send_player(name, "You haven't died on this server... yet.")
+		else
+			minetest.chat_send_player(name, "Teleporting to bones, don't move for 5 seconds.")
+			minetest.after(5, find_bones, clicker, player_pos, pos)
+		end
 	end,
 	on_punch = function(pos, node, puncher)
 		local name = puncher:get_player_name()
