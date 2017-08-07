@@ -286,9 +286,13 @@ crops.particles = function(pos, flag)
 end
 
 crops.die = function(pos)
-	crops.particles(pos, 3)
 	local node = minetest.get_node(pos)
 	local plant = find_plant(node)
+	if not plant then
+		minetest.remove_node({x = pos.x, y = pos.y + 1, z = pos.z})
+		return false
+	end
+	crops.particles(pos, 3)
 	plant.properties.die(pos)
 	minetest.sound_play("crops_flies", {pos=pos, gain=0.8})
 end
