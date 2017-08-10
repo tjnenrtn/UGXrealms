@@ -34,7 +34,7 @@ mobs:register_mob("slimes:greensmall", {
 	armor = 100,
 	view_range = 15,
 	drops = {
-		{name = "mesecons_materials:glue", chance = 4, min = 1, max = 2},
+		{name = "bonemeal:fertiliser", chance = 4, min = 1, max = 2},
 	},
 	drawtype = "front",
 	water_damage = 0,
@@ -119,6 +119,7 @@ mobs:spawn_specific("slimes:greenmedium", {"default:junglegrass"},{"air","defaul
 mobs:spawn_specific("slimes:greensmall", {"default:junglegrass"},{"air","default:junglegrass"}, 4, 4, 30, 15000, 8, 0, 32000)
 
 --mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height)
-mobs:register_spawn("slimes:greenmedium", {"default:mossycobble"}, 20, 4, 10000, 8, 32000)
-mobs:register_spawn("slimes:greensmall", {"default:mossycobble"}, 20, 4, 10000, 8, 32000)
+mobs:register_spawn("slimes:greenbig", {"default:mossycobble","default:cactus","default:papyrus","flowers:waterlily"}, 20, 4, 2500, 1, 32000)
+mobs:register_spawn("slimes:greenmedium", {"default:mossycobble","default:cactus","default:papyrus","flowers:waterlily"}, 20, 4, 1500, 1, 32000)
+mobs:register_spawn("slimes:greensmall", {"default:mossycobble","default:cactus","default:papyrus","flowers:waterlily"}, 20, 4, 1000, 2, 32000)
 

@@ -125,6 +125,6 @@ mobs:register_egg("slimes:lavabig", "Big Lava Slime", "lava_slime_egg.png", 1)
 
 --mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height)
 
-mobs:spawn_specific("slimes:lavabig", {"default:lava_source"},{"default:lava_flowing"}, 4, 20, 30, 5000, 8, -32000, -64)
-mobs:spawn_specific("slimes:lavamedium", {"default:lava_source"},{"default:lava_flowing"}, 4, 20, 30, 10000, 8, -32000, -64)
-mobs:spawn_specific("slimes:lavasmall", {"default:lava_source"},{"default:lava_flowing"}, 4, 20, 30, 15000, 8, -32000, -64)
+mobs:spawn_specific("slimes:lavabig", {"default:lava_source"},{"default:lava_flowing"}, 4, 20, 30, 5000, 2, -32000, -64)
+mobs:spawn_specific("slimes:lavamedium", {"default:lava_source"},{"default:lava_flowing"}, 4, 20, 30, 2000, 2, -32000, -64)
+mobs:spawn_specific("slimes:lavasmall", {"default:lava_source","caverealms:hot_cobble","caverealms:glow_obsidian_2"},{"air"}, 4, 20, 30, 1000, 2, -32000, -64)
