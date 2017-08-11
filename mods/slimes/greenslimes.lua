@@ -119,7 +119,7 @@ mobs:spawn_specific("slimes:greenmedium", {"default:junglegrass"},{"air","defaul
 mobs:spawn_specific("slimes:greensmall", {"default:junglegrass"},{"air","default:junglegrass"}, 4, 4, 30, 15000, 8, 0, 32000)
 
 --mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height)
-mobs:register_spawn("slimes:greenbig", {"default:mossycobble","default:cactus","default:papyrus","flowers:waterlily"}, 20, 4, 2500, 1, 32000)
-mobs:register_spawn("slimes:greenmedium", {"default:mossycobble","default:cactus","default:papyrus","flowers:waterlily"}, 20, 4, 1500, 1, 32000)
-mobs:register_spawn("slimes:greensmall", {"default:mossycobble","default:cactus","default:papyrus","flowers:waterlily"}, 20, 4, 1000, 2, 32000)
+mobs:register_spawn("slimes:greenbig", {"default:mossycobble","default:cactus","default:papyrus","flowers:waterlily"}, 20, 4, 3500, 1, 32000)
+mobs:register_spawn("slimes:greenmedium", {"default:mossycobble","default:cactus","default:papyrus","flowers:waterlily"}, 20, 4, 2500, 1, 32000)
+mobs:register_spawn("slimes:greensmall", {"default:mossycobble","default:cactus","default:papyrus","flowers:waterlily"}, 20, 4, 2000, 2, 32000)
 
