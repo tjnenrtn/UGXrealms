@@ -10,12 +10,12 @@ local hud_update = function(player)
 		player:hud_remove(hud_id[name])
 		hud_id[name] = player:hud_add({
 			hud_elem_type = "text",
-			position = {x = 1, y = 1},
-			offset = {x=-20, y = -20},
-			scale = {x = 100, y = 100},
+			position = {x = 0.5, y = 0.85},
+			offset = {x = 0, y = 0},
+			scale = {x = 2, y = 2},
 			text = hud_msg[name],
 			number = 0xFFFFFF,
-			alignment = {x = -1, y = 0},
+			alignment = {x = 0, y = 0},
 			direction = 2,
 		})
 	else
@@ -51,7 +51,7 @@ description = "Show or hide the deathposition from the hud",
 privs = {interact = true},
 params = "show|hide",
 func = function(name, param)
-	if param == "show" then
+	if param == "show" or param == "" then
 		hud_on[name] = true
 	elseif param == "hide" then
 		hud_on[name] = false
@@ -106,7 +106,7 @@ minetest.register_node("death_pos:bone_finder", {
 		elseif hud_on[name] == true then
 			hud_on[name] = false
 		end
-		hud_update(puncher)		
+		hud_update(puncher)
 	end
 })
 
